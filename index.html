@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UniShare | Academic Summary Platform</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #f5fbfc;
+            color: #17324d;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #0f7c8c;
+        }
+
+        .logo span {
+            color: #174ea6;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 600;
+            color: #17324d;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #0f7c8c;
+        }
+
+        .active-link {
+            background-color: #0f7c8c;
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 25px;
+        }
+
+        .active-link:hover {
+            background-color: #095d69;
+        }
+
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 70px 8%;
+            gap: 40px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-content h1 {
+            font-size: 52px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: #17324d;
+        }
+
+        .hero-content h1 span {
+            color: #0f7c8c;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: #52677a;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .primary-btn {
+            background-color: #0f7c8c;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: #095d69;
+            transform: translateY(-2px);
+        }
+
+        .secondary-btn {
+            border: 2px solid #0f7c8c;
+            color: #0f7c8c;
+            background-color: white;
+        }
+
+        .secondary-btn:hover {
+            background-color: #e5f7fa;
+            transform: translateY(-2px);
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, #0f7c8c, #174ea6);
+            color: white;
+            padding: 35px;
+            border-radius: 25px;
+            width: 360px;
+            box-shadow: 0 15px 35px rgba(15, 124, 140, 0.25);
+        }
+
+        .hero-card h3 {
+            font-size: 24px;
+            margin-bottom: 18px;
+        }
+
+        .summary-item {
+            background-color: rgba(255, 255, 255, 0.16);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 14px;
+        }
+
+        .summary-item strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .section {
+            padding: 70px 8%;
+            text-align: center;
+        }
+
+        .section h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #17324d;
+        }
+
+        .section-subtitle {
+            color: #52677a;
+            margin-bottom: 45px;
+            font-size: 17px;
+        }
+
+        .features-grid,
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .feature-card,
+        .step-card {
+            background-color: white;
+            padding: 32px;
+            border-radius: 22px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+            transition: 0.3s;
+        }
+
+        .feature-card:hover,
+        .step-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .feature-icon,
+        .step-number {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: #e5f7fa;
+            color: #0f7c8c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .feature-card h3,
+        .step-card h3 {
+            font-size: 21px;
+            margin-bottom: 12px;
+            color: #17324d;
+        }
+
+        .feature-card p,
+        .step-card p {
+            color: #52677a;
+            font-size: 15px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #0f7c8c, #174ea6);
+            color: white;
+            padding: 65px 8%;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 34px;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            margin-bottom: 25px;
+            font-size: 17px;
+        }
+
+        .cta-section .primary-btn {
+            background-color: white;
+            color: #0f7c8c;
+        }
+
+        footer {
+            background-color: #102a43;
+            color: white;
+            padding: 45px 8%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .footer-content h3,
+        .footer-content h4 {
+            margin-bottom: 15px;
+        }
+
+        .footer-content p,
+        .footer-content a {
+            color: #d9e2ec;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            color: #bcccdc;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 40px;
+            }
+
+            .hero-card {
+                width: 100%;
+                max-width: 420px;
+            }
+
+            .features-grid,
+            .steps-grid,
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 14px;
+                font-size: 13px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .section h2 {
+                font-size: 28px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Uni<span>Share</span></div>
+        
+        <div class="nav-links">
+            <a href="index.html" class="active-link">Home</a>
+            <a href="browse.html">Browse Summaries</a>
+            <a href="upload.html">Upload Summary</a>
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Share and find academic summaries from <span>Israeli universities</span></h1>
+
+            <p>
+                UniShare helps students search, upload, and discover academic summaries
+                from Ben-Gurion University, Ariel University, Bar-Ilan University,
+                and many other institutions across Israel.
+            </p>
+
+            <p>
+                Search summaries by course, university, subject, and file type — all in one
+                organized student-friendly platform.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="browse.html" class="primary-btn">Start Browsing</a>
+                <a href="upload.html" class="secondary-btn">Upload a Summary</a>
+            </div>
+        </div>
+
+        <div class="hero-card">
+            <h3>Popular Summaries</h3>
+
+            <div class="summary-item">
+                <strong>Linear Algebra 1</strong>
+                Mathematics · Ben-Gurion University
+            </div>
+
+            <div class="summary-item">
+                <strong>Introduction to Programming</strong>
+                Computer Science · Bar-Ilan University
+            </div>
+
+            <div class="summary-item">
+                <strong>Microeconomics</strong>
+                Economics · Ariel University
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Why use UniShare?</h2>
+        <p class="section-subtitle">
+            A smarter way to access academic summaries created by students, for students.
+        </p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <h3>Cross-university access</h3>
+                <p>
+                    Find summaries from different Israeli universities and compare learning materials
+                    from a variety of courses.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Peer-reviewed summaries</h3>
+                <p>
+                    Discover useful student-created materials with ratings, recommendations,
+                    and community feedback.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔎</div>
+                <h3>Easy filtering</h3>
+                <p>
+                    Filter by course, university, subject, and file type to quickly find exactly
+                    what you need.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>How it works</h2>
+        <p class="section-subtitle">
+            Start studying smarter in three simple steps.
+        </p>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Search for a course</h3>
+                <p>
+                    Enter the course name or choose a university and subject from the filters.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Choose a summary</h3>
+                <p>
+                    Review summary details, university tags, upload date, and student ratings.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Download or save it</h3>
+                <p>
+                    Download the file or save it for later so you can return to it anytime.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Ready to find your next summary?</h2>
+        <p>
+            Join UniShare and discover academic materials from students across Israel.
+        </p>
+        <a href="browse.html" class="primary-btn">Start Browsing</a>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div>
+                <h3>UniShare</h3>
+                <p>
+                    A collaborative academic summary platform that helps Israeli university
+                    students share and find study materials.
+                </p>
+            </div>
+
+            <div>
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="browse.html">Browse Summaries</a>
+                <a href="upload.html">Upload Summary</a>
+                <a href="login.html">Login</a>
+            </div>
+
+            <div>
+                <h4>Contact</h4>
+                <p>Email: support@unishare.com</p>
+                <p>Location: Israel</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2026 UniShare. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+
+</html>

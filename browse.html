@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Summaries | UniShare</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background-color: #f5fbfc;
+      color: #17324d;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .navbar {
+      width: 100%;
+      background-color: #ffffff;
+      padding: 18px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+      color: #0f7c8c;
+    }
+
+    .logo span {
+      color: #174ea6;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 15px;
+      font-weight: 600;
+      color: #17324d;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #0f7c8c;
+    }
+
+    .active-link {
+      background-color: #0f7c8c;
+      color: white !important;
+      padding: 10px 18px;
+      border-radius: 25px;
+    }
+
+    .active-link:hover {
+      background-color: #095d69;
+    }
+
+    .page-header {
+      padding: 55px 8% 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #0f7c8c, #174ea6);
+      color: white;
+    }
+
+    .page-header h1 {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      font-size: 17px;
+      color: #e5f7fa;
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+      padding: 40px 8%;
+    }
+
+    .filters {
+      background-color: white;
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+      height: fit-content;
+      position: sticky;
+      top: 110px;
+    }
+
+    .filters h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #c9dce3;
+      border-radius: 14px;
+      font-size: 14px;
+      outline: none;
+      background-color: #fbfeff;
+      transition: 0.3s;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      border-color: #0f7c8c;
+      box-shadow: 0 0 0 3px rgba(15, 124, 140, 0.12);
+    }
+
+    .reset-btn {
+      width: 100%;
+      border: none;
+      background-color: #102a43;
+      color: white;
+      padding: 13px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .reset-btn:hover {
+      background-color: #0f7c8c;
+      transform: translateY(-2px);
+    }
+
+    .content-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+
+    .content-top h2 {
+      font-size: 28px;
+    }
+
+    .results-count {
+      background-color: #e5f7fa;
+      color: #0f7c8c;
+      padding: 9px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .summary-card {
+      background-color: white;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 35px rgba(15, 124, 140, 0.16);
+    }
+
+    .university-tag {
+      display: inline-block;
+      background-color: #e5f7fa;
+      color: #0f7c8c;
+      padding: 7px 12px;
+      border-radius: 18px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      width: fit-content;
+    }
+
+    .summary-card h3 {
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .subject {
+      font-weight: bold;
+      color: #174ea6;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .description {
+      color: #52677a;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .summary-meta {
+      border-top: 1px solid #e6eef2;
+      padding-top: 15px;
+      margin-top: auto;
+    }
+
+    .summary-meta p {
+      font-size: 13px;
+      color: #52677a;
+      margin-bottom: 6px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .download-btn,
+    .favorite-btn {
+      flex: 1;
+      border: none;
+      padding: 11px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 13px;
+    }
+
+    .download-btn {
+      background-color: #0f7c8c;
+      color: white;
+    }
+
+    .download-btn:hover {
+      background-color: #095d69;
+    }
+
+    .favorite-btn {
+      background-color: #e5f7fa;
+      color: #0f7c8c;
+    }
+
+    .favorite-btn:hover {
+      background-color: #c9f0f6;
+    }
+
+    .no-results {
+      display: none;
+      background-color: white;
+      border-radius: 22px;
+      padding: 45px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+      color: #52677a;
+    }
+
+    .no-results h3 {
+      font-size: 24px;
+      color: #17324d;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 1150px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        position: static;
+      }
+
+      .page-header h1 {
+        font-size: 34px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .card-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Uni<span>Share</span></div>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="browse.html" class="active-link">Browse Summaries</a>
+      <a href="upload.html">Upload Summary</a>
+      <a href="login.html">Login</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Browse Academic Summaries</h1>
+    <p>
+      Search and filter student-shared summaries by university, subject, course name,
+      or keyword. Find the materials you need faster and study smarter.
+    </p>
+  </header>
+
+  <main class="dashboard-layout">
+
+    <aside class="filters">
+      <h2>Filters</h2>
+
+      <div class="filter-group">
+        <label for="universityFilter">University</label>
+        <select id="universityFilter">
+          <option value="All">All</option>
+          <option value="Ben-Gurion University">Ben-Gurion University</option>
+          <option value="Ariel University">Ariel University</option>
+          <option value="Bar-Ilan University">Bar-Ilan University</option>
+          <option value="Tel Aviv University">Tel Aviv University</option>
+          <option value="Hebrew University">Hebrew University</option>
+          <option value="University of Haifa">University of Haifa</option>
+          <option value="Technion">Technion</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="subjectFilter">Subject / Major</label>
+        <select id="subjectFilter">
+          <option value="All">All</option>
+          <option value="Mathematics">Mathematics</option>
+          <option value="Physics">Physics</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="Information Science">Information Science</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Psychology">Psychology</option>
+          <option value="Economics">Economics</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="searchInput">Search Course / Keyword</label>
+        <input type="text" id="searchInput" placeholder="Search summaries..." />
+      </div>
+
+      <button class="reset-btn" id="resetBtn">Reset Filters</button>
+    </aside>
+
+    <section class="summaries-content">
+      <div class="content-top">
+        <h2>Available Summaries</h2>
+        <div class="results-count" id="resultsCount">8 summaries found</div>
+      </div>
+
+      <div class="cards-grid" id="cardsGrid">
+
+        <div class="summary-card" data-university="Ben-Gurion University" data-subject="Mathematics" data-keywords="linear algebra matrix vectors math">
+          <span class="university-tag">Ben-Gurion University</span>
+          <h3>Linear Algebra 1</h3>
+          <p class="subject">Mathematics</p>
+          <p class="description">Complete summary covering matrices, vector spaces, determinants, and practice questions.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Noa Levi</p>
+            <p><strong>Upload date:</strong> 12 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.8 | 34 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="summary-card" data-university="Bar-Ilan University" data-subject="Computer Science" data-keywords="programming python loops functions intro">
+          <span class="university-tag">Bar-Ilan University</span>
+          <h3>Introduction to Programming</h3>
+          <p class="subject">Computer Science</p>
+          <p class="description">Beginner-friendly notes about variables, loops, functions, lists, and basic programming logic.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Daniel Cohen</p>
+            <p><strong>Upload date:</strong> 18 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.7 | 28 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="summary-card" data-university="Ariel University" data-subject="Economics" data-keywords="microeconomics supply demand market">
+          <span class="university-tag">Ariel University</span>
+          <h3>Introduction to Microeconomics</h3>
+          <p class="subject">Economics</p>
+          <p class="description">Summary of supply and demand, market equilibrium, elasticity, and consumer behavior.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Maya Israeli</p>
+            <p><strong>Upload date:</strong> 21 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.6 | 19 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="summary-card" data-university="Tel Aviv University" data-subject="Psychology" data-keywords="social psychology attitudes behavior cognition">
+          <span class="university-tag">Tel Aviv University</span>
+          <h3>Social Psychology</h3>
+          <p class="subject">Psychology</p>
+          <p class="description">Clear notes about social influence, attitudes, group behavior, and decision making.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Itay Mizrahi</p>
+            <p><strong>Upload date:</strong> 23 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.5 | 22 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="summary-card" data-university="Technion" data-subject="Engineering" data-keywords="mechanics engineering forces motion">
+          <span class="university-tag">Technion</span>
+          <h3>Engineering Mechanics</h3>
+          <p class="subject">Engineering</p>
+          <p class="description">Study material covering forces, motion, equilibrium, and solved engineering examples.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Amir Bar</p>
+            <p><strong>Upload date:</strong> 24 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.9 | 41 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="summary-card" data-university="Hebrew University" data-subject="Physics" data-keywords="classical mechanics physics motion energy">
+          <span class="university-tag">Hebrew University</span>
+          <h3>Classical Mechanics</h3>
+          <p class="subject">Physics</p>
+          <p class="description">Concise summary of Newtonian mechanics, energy, momentum, and common exam questions.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Tamar Shalev</p>
+            <p><strong>Upload date:</strong> 25 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.4 | 16 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="summary-card" data-university="University of Haifa" data-subject="Information Science" data-keywords="databases sql information systems data">
+          <span class="university-tag">University of Haifa</span>
+          <h3>Database Systems</h3>
+          <p class="subject">Information Science</p>
+          <p class="description">Summary about ERD, SQL queries, normalization, keys, and relational database concepts.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Lior Azulay</p>
+            <p><strong>Upload date:</strong> 26 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.8 | 37 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="summary-card" data-university="Ben-Gurion University" data-subject="Computer Science" data-keywords="data structures algorithms trees lists complexity">
+          <span class="university-tag">Ben-Gurion University</span>
+          <h3>Data Structures</h3>
+          <p class="subject">Computer Science</p>
+          <p class="description">Detailed notes on arrays, linked lists, stacks, queues, trees, and algorithm complexity.</p>
+          <div class="summary-meta">
+            <p><strong>Uploader:</strong> Shira Ben-David</p>
+            <p><strong>Upload date:</strong> 27 May 2026</p>
+            <p><strong>File type:</strong> PDF</p>
+            <p><strong>Rating:</strong> ⭐ 4.9 | 45 likes</p>
+          </div>
+          <div class="card-actions">
+            <button class="download-btn">Download PDF</button>
+            <button class="favorite-btn">Save</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="no-results" id="noResults">
+        <h3>No summaries found</h3>
+        <p>Try changing the university, subject, or search keyword.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const universityFilter = document.getElementById("universityFilter");
+    const subjectFilter = document.getElementById("subjectFilter");
+    const searchInput = document.getElementById("searchInput");
+    const resetBtn = document.getElementById("resetBtn");
+    const cards = document.querySelectorAll(".summary-card");
+    const resultsCount = document.getElementById("resultsCount");
+    const noResults = document.getElementById("noResults");
+
+    function filterCards() {
+      const selectedUniversity = universityFilter.value;
+      const selectedSubject = subjectFilter.value;
+      const searchText = searchInput.value.toLowerCase().trim();
+
+      let visibleCount = 0;
+
+      cards.forEach(function(card) {
+        const cardUniversity = card.getAttribute("data-university");
+        const cardSubject = card.getAttribute("data-subject");
+        const cardKeywords = card.getAttribute("data-keywords").toLowerCase();
+        const cardText = card.textContent.toLowerCase();
+
+        const matchesUniversity =
+          selectedUniversity === "All" || cardUniversity === selectedUniversity;
+
+        const matchesSubject =
+          selectedSubject === "All" || cardSubject === selectedSubject;
+
+        const matchesSearch =
+          searchText === "" ||
+          cardText.includes(searchText) ||
+          cardKeywords.includes(searchText);
+
+        if (matchesUniversity && matchesSubject && matchesSearch) {
+          card.style.display = "flex";
+          visibleCount++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      resultsCount.textContent =
+        visibleCount === 1 ? "1 summary found" : visibleCount + " summaries found";
+
+      noResults.style.display = visibleCount === 0 ? "block" : "none";
+    }
+
+    universityFilter.addEventListener("change", filterCards);
+    subjectFilter.addEventListener("change", filterCards);
+    searchInput.addEventListener("input", filterCards);
+
+    resetBtn.addEventListener("click", function() {
+      universityFilter.value = "All";
+      subjectFilter.value = "All";
+      searchInput.value = "";
+      filterCards();
+    });
+
+    const favoriteButtons = document.querySelectorAll(".favorite-btn");
+
+    favoriteButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        if (button.textContent === "Save") {
+          button.textContent = "Saved ✓";
+          button.style.backgroundColor = "#d9f7e8";
+          button.style.color = "#087f5b";
+        } else {
+          button.textContent = "Save";
+          button.style.backgroundColor = "#e5f7fa";
+          button.style.color = "#0f7c8c";
+        }
+      });
+    });
+
+    const downloadButtons = document.querySelectorAll(".download-btn");
+
+    downloadButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        alert("PDF download simulation. In the full-stack version, this button will download the uploaded file.");
+      });
+    });
+  </script>
+
+</body>
+</html>
