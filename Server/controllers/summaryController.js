@@ -1,4 +1,5 @@
 const Summary = require('../models/Summary');
+require('../models/User');
 
 // Get all summaries
 const getAllSummaries = async (req, res) => {
@@ -17,6 +18,24 @@ const getAllSummaries = async (req, res) => {
   }
 };
 
+// Create new summary
+const createSummary = async (req, res) => {
+  try {
+    const newSummary = await Summary.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: newSummary
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
-  getAllSummaries
+  getAllSummaries,
+  createSummary
 };
