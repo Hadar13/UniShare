@@ -1,7 +1,8 @@
-require('dotenv').config(); //הכנה קובץ .env
+require('dotenv').config(); // הכנה לקובץ .env
 
 const express = require('express');
-const cors = require('cors'); //הכנה לחיבור עתידי מול React.
+const cors = require('cors'); // הכנה לחיבור עתידי מול React
+const summaryRoutes = require('./routes/summaryRoutes'); // מביא את ה-routes של הסיכומים
 
 const app = express();
 
@@ -12,4 +13,7 @@ app.get('/', (req, res) => {
   res.send('UniShare server is running');
 });
 
-module.exports = app; //מייצאת את האפליקציה כדי ש־server.js יוכל להפעיל אותה
+// חיבור ה-routes של הסיכומים לשרת
+app.use('/api/summaries', summaryRoutes);
+
+module.exports = app; // מייצאת את האפליקציה כדי ש־server.js יוכל להפעיל אותה
