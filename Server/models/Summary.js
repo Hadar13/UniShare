@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('./User');
 
 const summarySchema = new mongoose.Schema({
   courseName: {
