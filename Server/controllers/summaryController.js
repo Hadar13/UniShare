@@ -64,18 +64,27 @@ const getSummaryById = async (req, res) => {
 // Update summary by id
 const updateSummary = async (req, res) => {
   try {
-    const updatedSummary = await Summary.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const summary = await Summary.findById(req.params.id);
 
-    if (!updatedSummary) {
+    if (!summary) {
       return res.status(404).json({
         success: false,
         message: 'Summary not found'
       });
     }
+
+    if (summary.uploader.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to update this summary'
+      });
+    }
+
+    const updatedSummary = await Summary.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
 
     res.status(200).json({
       success: true,
@@ -92,14 +101,23 @@ const updateSummary = async (req, res) => {
 // Delete summary by id
 const deleteSummary = async (req, res) => {
   try {
-    const deletedSummary = await Summary.findByIdAndDelete(req.params.id);
+    const summary = await Summary.findById(req.params.id);
 
-    if (!deletedSummary) {
+    if (!summary) {
       return res.status(404).json({
         success: false,
         message: 'Summary not found'
       });
     }
+
+    if (summary.uploader.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to delete this summary'
+      });
+    }
+
+    await Summary.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success: true,
