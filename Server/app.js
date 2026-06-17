@@ -3,6 +3,7 @@ require('dotenv').config(); // הכנה לקובץ .env
 const express = require('express');
 const cors = require('cors'); // הכנה לחיבור עתידי מול React
 const summaryRoutes = require('./routes/summaryRoutes'); // מביא את ה-routes של הסיכומים
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -15,5 +16,6 @@ app.get('/', (req, res) => {
 
 // חיבור ה-routes של הסיכומים לשרת
 app.use('/api/summaries', summaryRoutes);
+app.use('/api/auth', authRoutes);
 
 module.exports = app; // מייצאת את האפליקציה כדי ש־server.js יוכל להפעיל אותה
