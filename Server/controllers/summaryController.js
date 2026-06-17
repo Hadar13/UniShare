@@ -21,7 +21,10 @@ const getAllSummaries = async (req, res) => {
 // Create new summary
 const createSummary = async (req, res) => {
   try {
-    const newSummary = await Summary.create(req.body);
+    const newSummary = await Summary.create({
+      ...req.body,
+      uploader: req.user._id
+    });
 
     res.status(201).json({
       success: true,
