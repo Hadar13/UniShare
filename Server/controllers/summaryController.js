@@ -21,8 +21,24 @@ const getAllSummaries = async (req, res) => {
 // Create new summary
 const createSummary = async (req, res) => {
   try {
+
+    const fileUrl = req.file
+      ? `/uploads/${req.file.filename}`
+      : req.body.fileUrl;
+
+    if (!fileUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'File is required'
+      });
+    }
+
     const newSummary = await Summary.create({
-      ...req.body,
+      courseName: req.body.courseName,
+      university: req.body.university,
+      subject: req.body.subject,
+      description: req.body.description,
+      fileUrl: fileUrl,
       uploader: req.user._id
     });
 
