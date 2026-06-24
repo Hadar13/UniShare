@@ -169,7 +169,7 @@ function Upload() {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            rows="4"
+            rows={4}
             className="w-full border border-slate-300 rounded-lg px-4 py-2"
             placeholder="Write a short description about the summary..."
           />
