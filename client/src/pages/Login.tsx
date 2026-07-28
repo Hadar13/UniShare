@@ -21,8 +21,8 @@ function Login() {
     name: '',
     email: '',
     password: '',
-    university: 'Bar-Ilan University',
-    major: 'Information Science',
+    university: '',
+    major: '',
   });
 
   const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -144,6 +144,7 @@ function Login() {
                 onChange={handleLoginChange}
                 className="w-full border border-slate-300 rounded-lg px-4 py-2"
                 placeholder="Enter your email"
+                required
               />
             </div>
 
@@ -158,6 +159,7 @@ function Login() {
                 onChange={handleLoginChange}
                 className="w-full border border-slate-300 rounded-lg px-4 py-2"
                 placeholder="Enter your password"
+                required
               />
             </div>
 
@@ -192,6 +194,7 @@ function Login() {
               onChange={handleRegisterChange}
               className="w-full border border-slate-300 rounded-lg px-4 py-2"
               placeholder="Enter your full name"
+              required
             />
           </div>
 
@@ -206,6 +209,7 @@ function Login() {
               onChange={handleRegisterChange}
               className="w-full border border-slate-300 rounded-lg px-4 py-2"
               placeholder="Enter your email"
+              required
             />
           </div>
 
@@ -220,6 +224,7 @@ function Login() {
               onChange={handleRegisterChange}
               className="w-full border border-slate-300 rounded-lg px-4 py-2"
               placeholder="Create a password"
+              required
             />
           </div>
 
@@ -232,13 +237,17 @@ function Login() {
               value={registerData.university}
               onChange={handleRegisterChange}
               className="w-full border border-slate-300 rounded-lg px-4 py-2"
+              required
             >
-              <option>Bar-Ilan University</option>
-              <option>Tel Aviv University</option>
-              <option>Hebrew University</option>
-              <option>Technion</option>
-              <option>University of Haifa</option>
-              <option>Ariel University</option>
+              <option value="" disabled>
+                Select university
+              </option>
+              <option value="Bar-Ilan University">Bar-Ilan University</option>
+              <option value="Tel Aviv University">Tel Aviv University</option>
+              <option value="Hebrew University">Hebrew University</option>
+              <option value="Technion">Technion</option>
+              <option value="University of Haifa">University of Haifa</option>
+              <option value="Ariel University">Ariel University</option>
             </select>
           </div>
 
@@ -251,13 +260,17 @@ function Login() {
               value={registerData.major}
               onChange={handleRegisterChange}
               className="w-full border border-slate-300 rounded-lg px-4 py-2"
+              required
             >
-              <option>Information Science</option>
-              <option>Computer Science</option>
-              <option>Psychology</option>
-              <option>Economics</option>
-              <option>Engineering</option>
-              <option>Mathematics</option>
+              <option value="" disabled>
+                Select major
+              </option>
+              <option value="Information Science">Information Science</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Psychology">Psychology</option>
+              <option value="Economics">Economics</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Mathematics">Mathematics</option>
             </select>
           </div>
 
