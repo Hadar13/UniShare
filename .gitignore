@@ -13,7 +13,7 @@ Server/uploads/*
 *.log
 
 # Old static HTML files - not used in the final React app
-index.html
-browse.html
-login.html
-upload.html
+/index.html
+/browse.html
+/login.html
+/upload.html
