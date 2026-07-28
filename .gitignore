@@ -1,0 +1,19 @@
+node_modules/
+client/node_modules/
+Server/node_modules/
+
+.env
+Server/.env
+client/.env
+
+Server/uploads/*
+!Server/uploads/.gitkeep
+
+.DS_Store
+*.log
+
+# Old static HTML files - not used in the final React app
+index.html
+browse.html
+login.html
+upload.html
