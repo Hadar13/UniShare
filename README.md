@@ -161,7 +161,29 @@ npm run build
 
 ## Screenshots
 
-Screenshots will be added before submission.
+### Home
+![Home](screenshots/home.png)
+
+### Login
+![Login](screenshots/login.png)
+
+### Register
+![Register](screenshots/register.png)
+
+### Browse Summaries
+![Browse](screenshots/browse.png)
+
+### Upload Summary
+![Upload](screenshots/upload.png)
+
+### Profile
+![Profile](screenshots/profile.png)
+
+### Edit Summary
+![Edit Summary](screenshots/edit-summary.png)
+
+### 404 Not Found
+![Not Found](screenshots/not-found.png)
 
 ## Author
 
