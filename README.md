@@ -1,5 +1,11 @@
 # UniShare
 
+## Live Demo
+
+Frontend: https://uni-share-mu.vercel.app  
+Backend: https://unishare-server-1vdq.onrender.com
+
+
 UniShare is a full stack academic summary sharing platform for students.
 
 The system allows users to register, log in, upload academic summaries, browse shared summaries, edit and delete summaries, and manage their personal profile.
