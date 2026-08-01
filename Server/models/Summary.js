@@ -28,6 +28,18 @@ const summarySchema = new mongoose.Schema({
     required: true
   },
 
+  fileData: {
+    type: Buffer
+  },
+
+  fileMimeType: {
+    type: String
+  },
+
+  fileOriginalName: {
+    type: String
+  },
+
   uploader: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
