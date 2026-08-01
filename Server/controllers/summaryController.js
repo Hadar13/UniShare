@@ -41,6 +41,16 @@ const createSummary = async (req, res) => {
       fileUrl: fileUrl,
       uploader: req.user._id
     });
+    
+    const populatedSummary = await Summary.findById(newSummary._id).populate(
+      'uploader',
+      'name email'
+    );
+    
+    res.status(201).json({
+      success: true,
+      data: populatedSummary
+    });
 
     res.status(201).json({
       success: true,
