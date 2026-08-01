@@ -31,8 +31,12 @@ function SummaryCard({
   onUpdate,
   onDelete,
 }: SummaryCardProps) {
-  const fileFullUrl = `http://127.0.0.1:5000${summary.fileUrl}`;
-
+    const apiBaseUrl =
+    import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
+  
+  const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
+  
+  const fileFullUrl = `${serverBaseUrl}${summary.fileUrl}`;
   const isImageFile = /\.(jpg|jpeg|png|webp|gif)$/i.test(summary.fileUrl);
 
   return (
