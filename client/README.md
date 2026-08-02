@@ -1,16 +1,34 @@
-# React + Vite
+# UniShare Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend side of the UniShare project.
 
-Currently, two official plugins are available:
+The client is built with React, Vite, TypeScript, Tailwind CSS, React Router, Redux Toolkit, Axios, and Google OAuth.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Main Features
 
-## React Compiler
+- Home page
+- Login and Register
+- Google Login
+- Browse summaries
+- Upload summaries
+- Edit and delete summaries
+- Profile page
+- 404 page
+- Protected routes
+- Loading and error states
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Run Locally
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+```env
+VITE_API_URL=http://127.0.0.1:5000/api
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+```
