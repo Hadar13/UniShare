@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -17,6 +17,7 @@ function Profile() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState('');
   const [message, setMessage] = useState('');
+  const [imageVersion, setImageVersion] = useState(Date.now());
 
   useEffect(() => {
     const getUser = async () => {
@@ -31,7 +32,7 @@ function Profile() {
     getUser();
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
 
@@ -40,7 +41,7 @@ function Profile() {
     }
   };
 
-  const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage('');
 
@@ -58,6 +59,7 @@ function Profile() {
       setUser(response.data.data);
       setFile(null);
       setPreview('');
+      setImageVersion(Date.now());
       setMessage('Profile image updated successfully!');
     } catch (error: any) {
       setMessage(
@@ -84,13 +86,21 @@ function Profile() {
 
   const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
 
-  const imageSrc = preview
-    ? preview
-    : user.profileImage
-      ? user.profileImage.startsWith('http')
-        ? user.profileImage
-        : `${serverBaseUrl}${user.profileImage}`
-      : '';
+  const imageSrc = (() => {
+    if (preview) {
+      return preview;
+    }
+
+    if (!user.profileImage) {
+      return '';
+    }
+
+    if (user.profileImage.startsWith('http')) {
+      return user.profileImage;
+    }
+
+    return `${serverBaseUrl}${user.profileImage}?v=${imageVersion}`;
+  })();
 
   return (
     <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-8">
