@@ -23,9 +23,7 @@ const getAllSummaries = async (req, res) => {
 // Create new summary
 const createSummary = async (req, res) => {
   try {
-    const hasUploadedFile = !!req.file;
-
-    if (!hasUploadedFile && !req.body.fileUrl) {
+    if (!req.file) {
       return res.status(400).json({
         success: false,
         message: 'File is required'
@@ -37,17 +35,15 @@ const createSummary = async (req, res) => {
       university: req.body.university,
       subject: req.body.subject,
       description: req.body.description,
-      fileUrl: hasUploadedFile ? 'pending' : req.body.fileUrl,
-      fileData: hasUploadedFile ? req.file.buffer : undefined,
-      fileMimeType: hasUploadedFile ? req.file.mimetype : undefined,
-      fileOriginalName: hasUploadedFile ? req.file.originalname : undefined,
+      fileUrl: 'pending',
+      fileData: req.file.buffer,
+      fileMimeType: req.file.mimetype,
+      fileOriginalName: req.file.originalname,
       uploader: req.user._id
     });
 
-    if (hasUploadedFile) {
-      newSummary.fileUrl = `/api/summaries/${newSummary._id}/file`;
-      await newSummary.save();
-    }
+    newSummary.fileUrl = `/api/summaries/${newSummary._id}/file`;
+    await newSummary.save();
 
     const populatedSummary = await Summary.findById(newSummary._id)
       .select('-fileData')
@@ -134,9 +130,16 @@ const updateSummary = async (req, res) => {
       });
     }
 
+    const allowedUpdates = {
+      courseName: req.body.courseName,
+      university: req.body.university,
+      subject: req.body.subject,
+      description: req.body.description
+    };
+
     const updatedSummary = await Summary.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      allowedUpdates,
       { new: true, runValidators: true }
     )
       .select('-fileData')
