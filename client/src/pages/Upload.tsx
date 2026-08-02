@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -13,7 +13,7 @@ function Upload() {
     description: '',
   });
 
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -38,21 +38,33 @@ function Upload() {
     );
   }
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    } else {
+      setFile(null);
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage('');
     setLoading(true);
+
+    if (!file) {
+      setMessage('Please choose a file');
+      setLoading(false);
+      return;
+    }
 
     try {
       const data = new FormData();
@@ -61,11 +73,8 @@ function Upload() {
       data.append('university', formData.university);
       data.append('subject', formData.subject);
       data.append('description', formData.description);
+      data.append('file', file);
 
-      if (file) {
-        data.append('file', file);
-      }
-      
       await api.post('/summaries', data);
 
       setMessage('Summary uploaded successfully!');
@@ -78,14 +87,12 @@ function Upload() {
       });
 
       setFile(null);
-    } catch (error) {
-        console.log(error.response?.data || error.message);
-      
-        setMessage(
-          error.response?.data?.message ||
+    } catch (error: any) {
+      setMessage(
+        error.response?.data?.message ||
           'Upload failed. Please choose a file and make sure you are logged in.'
-        );
-      } finally {
+      );
+    } finally {
       setLoading(false);
     }
   };
@@ -118,6 +125,7 @@ function Upload() {
             onChange={handleChange}
             className="w-full border border-slate-300 rounded-lg px-4 py-2"
             placeholder="Example: Introduction to AI"
+            required
           />
         </div>
 
@@ -130,6 +138,7 @@ function Upload() {
             value={formData.university}
             onChange={handleChange}
             className="w-full border border-slate-300 rounded-lg px-4 py-2"
+            required
           >
             <option value="">Choose university</option>
             <option value="Bar-Ilan University">Bar-Ilan University</option>
@@ -150,6 +159,7 @@ function Upload() {
             value={formData.subject}
             onChange={handleChange}
             className="w-full border border-slate-300 rounded-lg px-4 py-2"
+            required
           >
             <option value="">Choose subject</option>
             <option value="Artificial Intelligence">Artificial Intelligence</option>
@@ -170,9 +180,13 @@ function Upload() {
             value={formData.description}
             onChange={handleChange}
             rows={4}
+            maxLength={500}
             className="w-full border border-slate-300 rounded-lg px-4 py-2"
             placeholder="Write a short description about the summary..."
           />
+          <p className="text-sm text-slate-500 mt-1">
+            Maximum 500 characters.
+          </p>
         </div>
 
         <div>
@@ -185,6 +199,7 @@ function Upload() {
             onChange={handleFileChange}
             className="w-full border border-slate-300 rounded-lg px-4 py-2"
             accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
+            required
           />
           <p className="text-sm text-slate-500 mt-1">
             Allowed: PDF, Word, JPG, PNG, WebP.

@@ -59,12 +59,12 @@ function Profile() {
       setFile(null);
       setPreview('');
       setMessage('Profile image updated successfully!');
-    }  catch (error: any) {
-        setMessage(
-          error.response?.data?.message ||
-            'Failed to update profile image'
-        );
-      }
+    } catch (error: any) {
+      setMessage(
+        error.response?.data?.message ||
+        'Failed to update profile image'
+      );
+    }
   };
 
   if (!user) {
@@ -75,17 +75,22 @@ function Profile() {
         </div>
       );
     }
-  
+
     return <LoadingSpinner text="Loading profile..." />;
   }
 
+  const apiBaseUrl =
+    import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
+
+  const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
+
   const imageSrc = preview
-  ? preview
-  : user.profileImage
-    ? user.profileImage.startsWith('http')
-      ? user.profileImage
-      : `http://127.0.0.1:5000${user.profileImage}`
-    : '';
+    ? preview
+    : user.profileImage
+      ? user.profileImage.startsWith('http')
+        ? user.profileImage
+        : `${serverBaseUrl}${user.profileImage}`
+      : '';
 
   return (
     <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-8">

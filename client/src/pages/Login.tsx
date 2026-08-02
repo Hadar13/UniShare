@@ -43,6 +43,7 @@ function Login() {
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessage('');
 
     try {
       const response = await api.post('/auth/login', loginData);
@@ -50,13 +51,14 @@ function Login() {
       login(response.data.token);
       setMessage('Login successful!');
       navigate('/browse');
-    } catch (error) {
-      setMessage('Login failed');
+    } catch (error: any) {
+      setMessage(error.response?.data?.message || 'Login failed');
     }
   };
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessage('');
 
     try {
       const response = await api.post('/auth/register', registerData);
@@ -64,12 +66,14 @@ function Login() {
       login(response.data.token);
       setMessage('Register successful!');
       navigate('/browse');
-    } catch (error) {
-      setMessage('Register failed');
+    } catch (error: any) {
+      setMessage(error.response?.data?.message || 'Register failed');
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    setMessage('');
+
     try {
       const response = await api.post('/auth/google', {
         credential: credentialResponse.credential,
@@ -78,13 +82,12 @@ function Login() {
       login(response.data.token);
       setMessage('Google login successful!');
       navigate('/browse');
-    } catch (error) {
-      setMessage('Google login failed');
+    } catch (error: any) {
+      setMessage(error.response?.data?.message || 'Google login failed');
     }
   };
 
   const handleGoogleError = () => {
-    console.log('Google Login Failed');
     setMessage('Google login failed');
   };
 
