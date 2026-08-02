@@ -18,6 +18,7 @@ function Profile() {
   const [preview, setPreview] = useState('');
   const [message, setMessage] = useState('');
   const [imageVersion, setImageVersion] = useState(Date.now());
+  const [imageRetry, setImageRetry] = useState(0);
 
   useEffect(() => {
     const getUser = async () => {
@@ -60,6 +61,7 @@ function Profile() {
       setFile(null);
       setPreview('');
       setImageVersion(Date.now());
+      setImageRetry(0);
       setMessage('Profile image updated successfully!');
     } catch (error: any) {
       setMessage(
@@ -99,7 +101,7 @@ function Profile() {
       return user.profileImage;
     }
 
-    return `${serverBaseUrl}${user.profileImage}?v=${imageVersion}`;
+    return `${serverBaseUrl}${user.profileImage}?v=${imageVersion}&retry=${imageRetry}`;
   })();
 
   return (
@@ -111,8 +113,16 @@ function Profile() {
       <div className="flex flex-col items-center mb-6">
         {imageSrc ? (
           <img
+            key={imageSrc}
             src={imageSrc}
             alt="Profile"
+            onError={() => {
+              if (imageRetry < 3) {
+                setTimeout(() => {
+                  setImageRetry((prev) => prev + 1);
+                }, 1000);
+              }
+            }}
             className="w-32 h-32 rounded-full object-cover border mb-4"
           />
         ) : (
