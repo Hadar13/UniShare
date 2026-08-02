@@ -16,9 +16,9 @@ function Profile() {
   const [user, setUser] = useState<User | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState('');
+  const [profileImageBlobUrl, setProfileImageBlobUrl] = useState('');
+  const [imageReloadKey, setImageReloadKey] = useState(0);
   const [message, setMessage] = useState('');
-  const [imageVersion, setImageVersion] = useState(Date.now());
-  const [imageRetry, setImageRetry] = useState(0);
 
   useEffect(() => {
     const getUser = async () => {
@@ -32,6 +32,51 @@ function Profile() {
 
     getUser();
   }, []);
+
+  useEffect(() => {
+    if (!user?.profileImage) {
+      setProfileImageBlobUrl('');
+      return;
+    }
+
+    if (user.profileImage.startsWith('http')) {
+      setProfileImageBlobUrl('');
+      return;
+    }
+
+    let objectUrl = '';
+    let isActive = true;
+
+    const loadProfileImage = async () => {
+      try {
+        const profileImagePath = user.profileImage!.replace(/^\/api/, '');
+
+        const response = await api.get<Blob>(profileImagePath, {
+          responseType: 'blob'
+        });
+
+        objectUrl = URL.createObjectURL(response.data);
+
+        if (isActive) {
+          setProfileImageBlobUrl(objectUrl);
+        }
+      } catch (error) {
+        if (isActive) {
+          setProfileImageBlobUrl('');
+        }
+      }
+    };
+
+    loadProfileImage();
+
+    return () => {
+      isActive = false;
+
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [user?.profileImage, imageReloadKey]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -60,8 +105,7 @@ function Profile() {
       setUser(response.data.data);
       setFile(null);
       setPreview('');
-      setImageVersion(Date.now());
-      setImageRetry(0);
+      setImageReloadKey((prev) => prev + 1);
       setMessage('Profile image updated successfully!');
     } catch (error: any) {
       setMessage(
@@ -83,26 +127,11 @@ function Profile() {
     return <LoadingSpinner text="Loading profile..." />;
   }
 
-  const apiBaseUrl =
-    import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
-
-  const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
-
-  const imageSrc = (() => {
-    if (preview) {
-      return preview;
-    }
-
-    if (!user.profileImage) {
-      return '';
-    }
-
-    if (user.profileImage.startsWith('http')) {
-      return user.profileImage;
-    }
-
-    return `${serverBaseUrl}${user.profileImage}?v=${imageVersion}&retry=${imageRetry}`;
-  })();
+  const imageSrc = preview
+    ? preview
+    : user.profileImage?.startsWith('http')
+      ? user.profileImage
+      : profileImageBlobUrl;
 
   return (
     <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-8">
@@ -113,16 +142,8 @@ function Profile() {
       <div className="flex flex-col items-center mb-6">
         {imageSrc ? (
           <img
-            key={imageSrc}
             src={imageSrc}
             alt="Profile"
-            onError={() => {
-              if (imageRetry < 3) {
-                setTimeout(() => {
-                  setImageRetry((prev) => prev + 1);
-                }, 1000);
-              }
-            }}
             className="w-32 h-32 rounded-full object-cover border mb-4"
           />
         ) : (
