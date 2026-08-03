@@ -1,13 +1,20 @@
 {
-  "name": "server",
+  "name": "unishare-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend server for the UniShare full stack project",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "echo \"No automated tests configured\""
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "mongodb",
+    "mongoose",
+    "jwt",
+    "unishare"
+  ],
+  "author": "Hadar Yakuti",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.3",
