@@ -5,8 +5,10 @@ const router = express.Router();
 const summaryController = require('../controllers/summaryController');
 const { protect } = require('../middleware/authMiddleware');
 const validate = require('../middleware/validate');
-const { createSummarySchema } = require('../validation/summaryValidation');
-
+const {
+  createSummarySchema,
+  updateSummarySchema
+} = require('../validation/summaryValidation');
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
@@ -44,7 +46,11 @@ router.post(
   summaryController.createSummary
 );
 
-router.put('/:id', protect, summaryController.updateSummary);
-router.delete('/:id', protect, summaryController.deleteSummary);
+router.put(
+  '/:id',
+  protect,
+  validate(updateSummarySchema),
+  summaryController.updateSummary
+);router.delete('/:id', protect, summaryController.deleteSummary);
 
 module.exports = router;
