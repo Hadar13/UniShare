@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 
 import api from '../services/api';
@@ -8,6 +8,11 @@ import { useAuth } from '../context/AuthContext';
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from =
+    (location.state as { from?: { pathname?: string } } | null)?.from
+      ?.pathname || '/browse';
 
   const [activeTab, setActiveTab] = useState('login');
   const [message, setMessage] = useState('');
@@ -50,7 +55,7 @@ function Login() {
 
       login(response.data.token);
       setMessage('Login successful!');
-      navigate('/browse');
+      navigate(from, { replace: true });
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Login failed');
     }
@@ -65,7 +70,7 @@ function Login() {
 
       login(response.data.token);
       setMessage('Register successful!');
-      navigate('/browse');
+      navigate(from, { replace: true });
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Register failed');
     }
@@ -81,7 +86,7 @@ function Login() {
 
       login(response.data.token);
       setMessage('Google login successful!');
-      navigate('/browse');
+      navigate(from, { replace: true });
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Google login failed');
     }
@@ -99,27 +104,31 @@ function Login() {
 
       <div className="flex mb-6 bg-slate-100 rounded-lg p-1">
         <button
+          type="button"
           onClick={() => {
             setActiveTab('login');
             setMessage('');
           }}
-          className={`w-1/2 py-2 rounded-md font-semibold ${activeTab === 'login'
-            ? 'bg-blue-700 text-white'
-            : 'text-slate-600'
-            }`}
+          className={`w-1/2 py-2 rounded-md font-semibold ${
+            activeTab === 'login'
+              ? 'bg-blue-700 text-white'
+              : 'text-slate-600'
+          }`}
         >
           Login
         </button>
 
         <button
+          type="button"
           onClick={() => {
             setActiveTab('register');
             setMessage('');
           }}
-          className={`w-1/2 py-2 rounded-md font-semibold ${activeTab === 'register'
-            ? 'bg-blue-700 text-white'
-            : 'text-slate-600'
-            }`}
+          className={`w-1/2 py-2 rounded-md font-semibold ${
+            activeTab === 'register'
+              ? 'bg-blue-700 text-white'
+              : 'text-slate-600'
+          }`}
         >
           Register
         </button>
@@ -166,7 +175,10 @@ function Login() {
               />
             </div>
 
-            <button className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800">
+            <button
+              type="submit"
+              className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800"
+            >
               Login
             </button>
           </form>
@@ -279,7 +291,10 @@ function Login() {
             </select>
           </div>
 
-          <button className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800">
+          <button
+            type="submit"
+            className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800"
+          >
             Register
           </button>
         </form>
