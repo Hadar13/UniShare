@@ -103,11 +103,10 @@ function Login() {
             setActiveTab('login');
             setMessage('');
           }}
-          className={`w-1/2 py-2 rounded-md font-semibold ${
-            activeTab === 'login'
-              ? 'bg-blue-700 text-white'
-              : 'text-slate-600'
-          }`}
+          className={`w-1/2 py-2 rounded-md font-semibold ${activeTab === 'login'
+            ? 'bg-blue-700 text-white'
+            : 'text-slate-600'
+            }`}
         >
           Login
         </button>
@@ -117,11 +116,10 @@ function Login() {
             setActiveTab('register');
             setMessage('');
           }}
-          className={`w-1/2 py-2 rounded-md font-semibold ${
-            activeTab === 'register'
-              ? 'bg-blue-700 text-white'
-              : 'text-slate-600'
-          }`}
+          className={`w-1/2 py-2 rounded-md font-semibold ${activeTab === 'register'
+            ? 'bg-blue-700 text-white'
+            : 'text-slate-600'
+            }`}
         >
           Register
         </button>
@@ -163,6 +161,8 @@ function Login() {
                 className="w-full border border-slate-300 rounded-lg px-4 py-2"
                 placeholder="Enter your password"
                 required
+                minLength={6}
+                autoComplete="current-password"
               />
             </div>
 
@@ -228,6 +228,8 @@ function Login() {
               className="w-full border border-slate-300 rounded-lg px-4 py-2"
               placeholder="Create a password"
               required
+              minLength={6}
+              autoComplete="new-password"
             />
           </div>
 
