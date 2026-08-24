@@ -1,0 +1,110 @@
+{
+    "info": {
+      "name": "UniShare API",
+      "description": "Postman collection for testing the UniShare backend API.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Health Check",
+        "request": {
+          "method": "GET",
+          "url": "{{BASE_URL}}"
+        }
+      },
+      {
+        "name": "Get All Summaries",
+        "request": {
+          "method": "GET",
+          "url": "{{BASE_URL}}/api/summaries"
+        }
+      },
+      {
+        "name": "Register User",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"Postman Test\",\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\",\n  \"university\": \"Bar-Ilan University\",\n  \"major\": \"Information Science\"\n}"
+          },
+          "url": "{{BASE_URL}}/api/auth/register"
+        }
+      },
+      {
+        "name": "Login User",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}"
+          },
+          "url": "{{BASE_URL}}/api/auth/login"
+        }
+      },
+      {
+        "name": "Get Me",
+        "request": {
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{TOKEN}}",
+                "type": "string"
+              }
+            ]
+          },
+          "url": "{{BASE_URL}}/api/auth/me"
+        }
+      },
+      {
+        "name": "Get Me Without Token",
+        "request": {
+          "method": "GET",
+          "url": "{{BASE_URL}}/api/auth/me"
+        }
+      },
+      {
+        "name": "Get Summary File",
+        "request": {
+          "method": "GET",
+          "url": "{{BASE_URL}}/api/summaries/{{SUMMARY_ID}}/file"
+        }
+      }
+    ],
+    "variable": [
+      {
+        "key": "BASE_URL",
+        "value": "https://unishare-server-1vdq.onrender.com"
+      },
+      {
+        "key": "TOKEN",
+        "value": "PASTE_JWT_TOKEN_HERE"
+      },
+      {
+        "key": "SUMMARY_ID",
+        "value": "PASTE_SUMMARY_ID_HERE"
+      },
+      {
+        "key": "TEST_EMAIL",
+        "value": "postmantest123@example.com"
+      },
+      {
+        "key": "TEST_PASSWORD",
+        "value": "123456"
+      }
+    ]
+  }
