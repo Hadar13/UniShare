@@ -1,5 +1,6 @@
 import { memo, type ChangeEvent } from 'react';
 import type { Summary } from '../store/summariesSlice';
+import { Link } from 'react-router-dom';
 
 type EditForm = {
   courseName: string;
@@ -152,6 +153,13 @@ function SummaryCard({
           >
             Open File
           </a>
+
+          <Link
+            to={`/summaries/${summary._id}`}
+            className="mt-3 block text-center w-full bg-slate-200 text-slate-700 py-2 rounded-lg font-semibold hover:bg-slate-300"
+          >
+            View Details
+          </Link>
 
           {isOwner && (
             <>

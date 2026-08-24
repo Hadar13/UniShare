@@ -8,6 +8,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const Browse = lazy(() => import('./pages/Browse'));
+const SummaryDetail = lazy(() => import('./pages/SummaryDetail'));
 const Upload = lazy(() => import('./pages/Upload'));
 const Profile = lazy(() => import('./pages/Profile'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/browse" element={<Browse />} />
+            <Route path="/summaries/:id" element={<SummaryDetail />} />
 
             <Route
               path="/upload"
