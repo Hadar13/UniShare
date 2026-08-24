@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 
 import LoadingSpinner from '../components/LoadingSpinner';
 import SummaryCard from '../components/SummaryCard';
@@ -56,18 +56,20 @@ function Browse() {
     fetchCurrentUser();
   }, [isLoggedIn]);
 
-  const filteredSummaries = summaries.filter((summary) => {
-    const matchesSearch = summary.courseName
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  const filteredSummaries = useMemo(() => {
+    return summaries.filter((summary) => {
+      const matchesSearch = summary.courseName
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-    const matchesUniversity =
-      university === '' || summary.university === university;
+      const matchesUniversity =
+        university === '' || summary.university === university;
 
-    const matchesSubject = subject === '' || summary.subject === subject;
+      const matchesSubject = subject === '' || summary.subject === subject;
 
-    return matchesSearch && matchesUniversity && matchesSubject;
-  });
+      return matchesSearch && matchesUniversity && matchesSubject;
+    });
+  }, [summaries, search, university, subject]);
 
   const resetFilters = () => {
     setSearch('');
@@ -174,7 +176,9 @@ function Browse() {
             className="border border-slate-300 rounded-lg px-4 py-2"
           >
             <option value="">All Subjects</option>
-            <option value="Artificial Intelligence">Artificial Intelligence</option>
+            <option value="Artificial Intelligence">
+              Artificial Intelligence
+            </option>
             <option value="Databases">Databases</option>
             <option value="Psychology">Psychology</option>
             <option value="Computer Science">Computer Science</option>
