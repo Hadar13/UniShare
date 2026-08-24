@@ -5,39 +5,55 @@ const summarySchema = new mongoose.Schema({
   courseName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    minlength: 2,
+    maxlength: 100
   },
 
   university: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 100
   },
 
   subject: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 100
   },
 
   description: {
     type: String,
-    maxlength: 500
+    trim: true,
+    maxlength: 500,
+    default: ''
   },
 
   fileUrl: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
 
   fileData: {
-    type: Buffer
+    type: Buffer,
+    required: true
   },
 
   fileMimeType: {
-    type: String
+    type: String,
+    required: true,
+    trim: true
   },
 
   fileOriginalName: {
-    type: String
+    type: String,
+    required: true,
+    trim: true
   },
 
   uploader: {
