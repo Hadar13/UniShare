@@ -142,6 +142,9 @@ function SummaryCard({
               src={fileFullUrl}
               alt={summary.courseName}
               className="w-full h-40 object-cover rounded-lg mb-4 border"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
             />
           )}
 
