@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import api from '../services/api';
 import type { RootState, AppDispatch } from '../store/store';
 import {
-  setSummaries,
-  setLoading,
-  setError,
+  fetchSummariesFromApi,
   setActionMessage,
   deleteSummaryFromStore,
   updateSummaryInStore,
@@ -30,17 +28,7 @@ function useSummaries() {
   );
 
   const fetchSummaries = useCallback(async () => {
-    try {
-      dispatch(setLoading(true));
-      dispatch(setError(''));
-
-      const response = await api.get('/summaries');
-      dispatch(setSummaries(response.data.data));
-    } catch (error) {
-      dispatch(setError('Failed to load summaries'));
-    } finally {
-      dispatch(setLoading(false));
-    }
+    await dispatch(fetchSummariesFromApi());
   }, [dispatch]);
 
   const deleteSummary = useCallback(

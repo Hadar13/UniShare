@@ -1,4 +1,11 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
+
+import api from '../services/api';
+
 export type Summary = {
   _id: string;
   courseName: string;
@@ -27,6 +34,21 @@ const initialState: SummariesState = {
   error: '',
   actionMessage: '',
 };
+
+export const fetchSummariesFromApi = createAsyncThunk<
+  Summary[],
+  void,
+  { rejectValue: string }
+>('summaries/fetchAll', async (_, { rejectWithValue }) => {
+  try {
+    const response = await api.get('/summaries');
+    return response.data.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || 'Failed to load summaries'
+    );
+  }
+});
 
 const summariesSlice = createSlice({
   name: 'summaries',
@@ -59,6 +81,22 @@ const summariesSlice = createSlice({
         summary._id === action.payload._id ? action.payload : summary
       );
     },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchSummariesFromApi.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+      })
+      .addCase(fetchSummariesFromApi.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchSummariesFromApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Failed to load summaries';
+      });
   },
 });
 
