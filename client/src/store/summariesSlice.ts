@@ -8,6 +8,8 @@ export type Summary = {
   fileUrl: string;
   createdAt?: string;
   uploader?: {
+    _id?: string;
+    id?: string;
     name?: string;
   };
 };

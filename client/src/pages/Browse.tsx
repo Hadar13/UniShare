@@ -4,6 +4,8 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import SummaryCard from '../components/SummaryCard';
 import useSummaries from '../hooks/useSummaries';
 import type { Summary } from '../store/summariesSlice';
+import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 function Browse() {
   const {
@@ -16,6 +18,9 @@ function Browse() {
     updateSummary,
     clearActionMessage,
   } = useSummaries();
+
+  const { isLoggedIn } = useAuth();
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const [search, setSearch] = useState('');
   const [university, setUniversity] = useState('');
@@ -33,6 +38,24 @@ function Browse() {
     fetchSummaries();
   }, [fetchSummaries]);
 
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      if (!isLoggedIn) {
+        setCurrentUserId(null);
+        return;
+      }
+
+      try {
+        const response = await api.get('/auth/me');
+        setCurrentUserId(response.data.data._id || response.data.data.id);
+      } catch {
+        setCurrentUserId(null);
+      }
+    };
+
+    fetchCurrentUser();
+  }, [isLoggedIn]);
+
   const filteredSummaries = summaries.filter((summary) => {
     const matchesSearch = summary.courseName
       .toLowerCase()
@@ -41,8 +64,7 @@ function Browse() {
     const matchesUniversity =
       university === '' || summary.university === university;
 
-    const matchesSubject =
-      subject === '' || summary.subject === subject;
+    const matchesSubject = subject === '' || summary.subject === subject;
 
     return matchesSearch && matchesUniversity && matchesSubject;
   });
@@ -181,19 +203,25 @@ function Browse() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {filteredSummaries.map((summary) => (
-            <SummaryCard
-              key={summary._id}
-              summary={summary}
-              isEditing={editingId === summary._id}
-              editForm={editForm}
-              onStartEdit={startEdit}
-              onCancelEdit={cancelEdit}
-              onEditChange={handleEditChange}
-              onUpdate={handleUpdate}
-              onDelete={handleDelete}
-            />
-          ))}
+          {filteredSummaries.map((summary) => {
+            const uploaderId = summary.uploader?._id || summary.uploader?.id;
+            const isOwner = !!currentUserId && uploaderId === currentUserId;
+
+            return (
+              <SummaryCard
+                key={summary._id}
+                summary={summary}
+                isOwner={isOwner}
+                isEditing={editingId === summary._id}
+                editForm={editForm}
+                onStartEdit={startEdit}
+                onCancelEdit={cancelEdit}
+                onEditChange={handleEditChange}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+              />
+            );
+          })}
         </div>
       )}
     </div>

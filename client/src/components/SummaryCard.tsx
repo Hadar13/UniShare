@@ -11,6 +11,7 @@ type EditForm = {
 type SummaryCardProps = {
   summary: Summary;
   isEditing: boolean;
+  isOwner: boolean;
   editForm: EditForm;
   onStartEdit: (summary: Summary) => void;
   onCancelEdit: () => void;
@@ -24,6 +25,7 @@ type SummaryCardProps = {
 function SummaryCard({
   summary,
   isEditing,
+  isOwner,
   editForm,
   onStartEdit,
   onCancelEdit,
@@ -31,17 +33,17 @@ function SummaryCard({
   onUpdate,
   onDelete,
 }: SummaryCardProps) {
-    const apiBaseUrl =
+  const apiBaseUrl =
     import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
-  
+
   const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
-  
+
   const fileFullUrl = `${serverBaseUrl}${summary.fileUrl}`;
   const isImageFile = /\.(jpg|jpeg|png|webp|gif)$/i.test(summary.fileUrl);
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
-      {isEditing ? (
+      {isEditing && isOwner ? (
         <div className="space-y-3">
           <input
             type="text"
@@ -151,19 +153,23 @@ function SummaryCard({
             Open File
           </a>
 
-          <button
-            onClick={() => onStartEdit(summary)}
-            className="mt-3 w-full bg-yellow-500 text-white py-2 rounded-lg font-semibold hover:bg-yellow-600"
-          >
-            Edit
-          </button>
+          {isOwner && (
+            <>
+              <button
+                onClick={() => onStartEdit(summary)}
+                className="mt-3 w-full bg-yellow-500 text-white py-2 rounded-lg font-semibold hover:bg-yellow-600"
+              >
+                Edit
+              </button>
 
-          <button
-            onClick={() => onDelete(summary._id)}
-            className="mt-3 w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700"
-          >
-            Delete
-          </button>
+              <button
+                onClick={() => onDelete(summary._id)}
+                className="mt-3 w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </>
+          )}
         </>
       )}
     </div>
