@@ -6,7 +6,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 function Login() {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,6 +49,7 @@ function Login() {
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage('');
+    logout();
 
     try {
       const response = await api.post('/auth/login', loginData);
@@ -142,7 +143,7 @@ function Login() {
 
       {activeTab === 'login' ? (
         <>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
             <div>
               <label className="block text-slate-700 font-medium mb-1">
                 Email
@@ -155,6 +156,7 @@ function Login() {
                 className="w-full border border-slate-300 rounded-lg px-4 py-2"
                 placeholder="Enter your email"
                 required
+                autoComplete="off"
               />
             </div>
 
@@ -171,7 +173,7 @@ function Login() {
                 placeholder="Enter your password"
                 required
                 minLength={6}
-                autoComplete="current-password"
+                autoComplete="new-password"
               />
             </div>
 
