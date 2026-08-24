@@ -63,4 +63,9 @@ const summarySchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+summarySchema.index({
+  courseName: 'text',
+  subject: 'text',
+  description: 'text'
+});
 module.exports = mongoose.model('Summary', summarySchema);

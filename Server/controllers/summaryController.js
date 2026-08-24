@@ -4,12 +4,43 @@ require('../models/User');
 // Get all summaries
 const getAllSummaries = async (req, res) => {
   try {
-    const summaries = await Summary.find()
-      .select('-fileData')
-      .populate('uploader', 'name email');
+    const { search, university, subject, page = 1, limit = 20 } = req.query;
+
+    const query = {};
+
+    if (search) {
+      query.$text = { $search: search };
+    }
+
+    if (university) {
+      query.university = university;
+    }
+
+    if (subject) {
+      query.subject = subject;
+    }
+
+    const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
+    const limitNumber = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const [summaries, total] = await Promise.all([
+      Summary.find(query)
+        .select('-fileData')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNumber)
+        .populate('uploader', 'name email'),
+
+      Summary.countDocuments(query)
+    ]);
 
     res.status(200).json({
       success: true,
+      count: summaries.length,
+      total,
+      page: pageNumber,
+      pages: Math.ceil(total / limitNumber),
       data: summaries
     });
   } catch (error) {
