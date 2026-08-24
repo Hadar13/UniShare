@@ -247,6 +247,16 @@ The frontend is deployed on Vercel.
 The backend is deployed on Render.  
 The database is hosted on MongoDB Atlas.
 
+## Team Members & Roles
+
+- Hadar Yakuti — Full Stack Developer: React frontend, Node.js and Express backend, MongoDB and Mongoose models, authentication, file upload, deployment, README documentation, and API testing.
+
+## Git Workflow
+
+The project is managed with Git and GitHub. Commit messages use clear conventional prefixes such as `feat`, `fix`, `docs`, and `chore`.
+
+For team collaboration, the workflow is based on feature branches, pull requests, review, merge into `dev`, and then merge production-ready code into `main`.
+
 ## Author
 
 Hadar Yakuti
