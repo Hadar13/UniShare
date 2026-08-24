@@ -13,76 +13,184 @@
         }
       },
       {
-        "name": "Get All Summaries",
-        "request": {
-          "method": "GET",
-          "url": "{{BASE_URL}}/api/summaries"
-        }
-      },
-      {
-        "name": "Register User",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
+        "name": "Auth",
+        "item": [
+          {
+            "name": "Register User",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Postman Test\",\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\",\n  \"university\": \"Bar-Ilan University\",\n  \"major\": \"Information Science\"\n}"
+              },
+              "url": "{{BASE_URL}}/api/auth/register"
             }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"name\": \"Postman Test\",\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\",\n  \"university\": \"Bar-Ilan University\",\n  \"major\": \"Information Science\"\n}"
           },
-          "url": "{{BASE_URL}}/api/auth/register"
-        }
-      },
-      {
-        "name": "Login User",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
+          {
+            "name": "Login User",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}"
+              },
+              "url": "{{BASE_URL}}/api/auth/login"
             }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}"
           },
-          "url": "{{BASE_URL}}/api/auth/login"
-        }
-      },
-      {
-        "name": "Get Me",
-        "request": {
-          "method": "GET",
-          "auth": {
-            "type": "bearer",
-            "bearer": [
-              {
-                "key": "token",
-                "value": "{{TOKEN}}",
-                "type": "string"
-              }
-            ]
+          {
+            "name": "Get Me",
+            "request": {
+              "method": "GET",
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{TOKEN}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "url": "{{BASE_URL}}/api/auth/me"
+            }
           },
-          "url": "{{BASE_URL}}/api/auth/me"
-        }
+          {
+            "name": "Get Me Without Token",
+            "request": {
+              "method": "GET",
+              "url": "{{BASE_URL}}/api/auth/me"
+            }
+          }
+        ]
       },
       {
-        "name": "Get Me Without Token",
-        "request": {
-          "method": "GET",
-          "url": "{{BASE_URL}}/api/auth/me"
-        }
-      },
-      {
-        "name": "Get Summary File",
-        "request": {
-          "method": "GET",
-          "url": "{{BASE_URL}}/api/summaries/{{SUMMARY_ID}}/file"
-        }
+        "name": "Summaries",
+        "item": [
+          {
+            "name": "Get All Summaries",
+            "request": {
+              "method": "GET",
+              "url": "{{BASE_URL}}/api/summaries"
+            }
+          },
+          {
+            "name": "Get Summary By ID",
+            "request": {
+              "method": "GET",
+              "url": "{{BASE_URL}}/api/summaries/{{SUMMARY_ID}}"
+            }
+          },
+          {
+            "name": "Create Summary",
+            "request": {
+              "method": "POST",
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{TOKEN}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  {
+                    "key": "courseName",
+                    "value": "Postman Test Course",
+                    "type": "text"
+                  },
+                  {
+                    "key": "university",
+                    "value": "Bar-Ilan University",
+                    "type": "text"
+                  },
+                  {
+                    "key": "subject",
+                    "value": "Information Science",
+                    "type": "text"
+                  },
+                  {
+                    "key": "description",
+                    "value": "Summary created for API testing.",
+                    "type": "text"
+                  },
+                  {
+                    "key": "file",
+                    "type": "file",
+                    "src": ""
+                  }
+                ]
+              },
+              "url": "{{BASE_URL}}/api/summaries"
+            }
+          },
+          {
+            "name": "Update Summary",
+            "request": {
+              "method": "PUT",
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{TOKEN}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"courseName\": \"Updated Postman Course\",\n  \"university\": \"Bar-Ilan University\",\n  \"subject\": \"Information Science\",\n  \"description\": \"Updated summary description.\"\n}"
+              },
+              "url": "{{BASE_URL}}/api/summaries/{{SUMMARY_ID}}"
+            }
+          },
+          {
+            "name": "Delete Summary",
+            "request": {
+              "method": "DELETE",
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{TOKEN}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "url": "{{BASE_URL}}/api/summaries/{{SUMMARY_ID}}"
+            }
+          },
+          {
+            "name": "Get Summary File",
+            "request": {
+              "method": "GET",
+              "url": "{{BASE_URL}}/api/summaries/{{SUMMARY_ID}}/file"
+            }
+          }
+        ]
       }
     ],
     "variable": [
@@ -104,7 +212,7 @@
       },
       {
         "key": "TEST_PASSWORD",
-        "value": "123456"
+        "value": "CHANGE_ME"
       }
     ]
   }
