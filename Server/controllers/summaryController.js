@@ -1,10 +1,18 @@
 const Summary = require('../models/Summary');
 require('../models/User');
 
-// Get all summaries
+/**
+ * Retrieves all summaries from the database.
+ * The uploaded file buffer is excluded from the response to keep the API response lightweight.
+ *
+ * @param {import('express').Request} req - The request object.
+ * @param {import('express').Response} res - The response object used to return all summaries.
+ * @returns {Promise<void>} Sends a JSON response with all summaries or an error message.
+ */
 const getAllSummaries = async (req, res) => {
   try {
     const summaries = await Summary.find()
+      // Exclude fileData because files are served separately through the file endpoint.
       .select('-fileData')
       .populate('uploader', 'name email');
 
@@ -20,7 +28,14 @@ const getAllSummaries = async (req, res) => {
   }
 };
 
-// Create new summary
+/**
+ * Creates a new summary with an uploaded file.
+ * The file is received by Multer and stored in MongoDB as Buffer data.
+ *
+ * @param {import('express').Request} req - The request object containing summary fields, req.file, and req.user.
+ * @param {import('express').Response} res - The response object used to return the created summary.
+ * @returns {Promise<void>} Sends a JSON response with the created summary or an error message.
+ */
 const createSummary = async (req, res) => {
   try {
     if (!req.file) {
@@ -42,6 +57,7 @@ const createSummary = async (req, res) => {
       uploader: req.user._id
     });
 
+    // The file URL depends on the MongoDB ID, so it is added after the summary is created.
     newSummary.fileUrl = `/api/summaries/${newSummary._id}/file`;
     await newSummary.save();
 
@@ -61,7 +77,14 @@ const createSummary = async (req, res) => {
   }
 };
 
-// Get uploaded file from MongoDB
+/**
+ * Retrieves an uploaded summary file from MongoDB.
+ * The stored MIME type and original filename are used so the browser can open the file correctly.
+ *
+ * @param {import('express').Request} req - The request object containing the summary ID in req.params.id.
+ * @param {import('express').Response} res - The response object used to send the file.
+ * @returns {Promise<void>} Sends the uploaded file or a not found/error response.
+ */
 const getSummaryFile = async (req, res) => {
   try {
     const summary = await Summary.findById(req.params.id).select(
@@ -72,6 +95,7 @@ const getSummaryFile = async (req, res) => {
       return res.status(404).send('File not found');
     }
 
+    // Remove characters that can break the Content-Disposition header.
     const safeFileName = (summary.fileOriginalName || 'summary-file').replace(
       /["\r\n]/g,
       ''
@@ -85,7 +109,14 @@ const getSummaryFile = async (req, res) => {
   }
 };
 
-// Get single summary by id
+/**
+ * Retrieves a single summary by its ID.
+ * The file buffer is excluded, and uploader details are populated for display.
+ *
+ * @param {import('express').Request} req - The request object containing the summary ID in req.params.id.
+ * @param {import('express').Response} res - The response object used to return the summary.
+ * @returns {Promise<void>} Sends a JSON response with the summary or an error message.
+ */
 const getSummaryById = async (req, res) => {
   try {
     const summary = await Summary.findById(req.params.id)
@@ -111,7 +142,14 @@ const getSummaryById = async (req, res) => {
   }
 };
 
-// Update summary by id
+/**
+ * Updates an existing summary by ID.
+ * Only the original uploader is allowed to update the summary details.
+ *
+ * @param {import('express').Request} req - The request object containing updated summary fields and req.user.
+ * @param {import('express').Response} res - The response object used to return the updated summary.
+ * @returns {Promise<void>} Sends a JSON response with the updated summary or an error message.
+ */
 const updateSummary = async (req, res) => {
   try {
     const summary = await Summary.findById(req.params.id);
@@ -123,6 +161,7 @@ const updateSummary = async (req, res) => {
       });
     }
 
+    // Ownership check: users can only update summaries they uploaded.
     if (summary.uploader.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -130,6 +169,7 @@ const updateSummary = async (req, res) => {
       });
     }
 
+    // Only editable text fields are updated; file data and uploader cannot be changed here.
     const allowedUpdates = {
       courseName: req.body.courseName,
       university: req.body.university,
@@ -157,7 +197,14 @@ const updateSummary = async (req, res) => {
   }
 };
 
-// Delete summary by id
+/**
+ * Deletes an existing summary by ID.
+ * Only the original uploader is allowed to delete the summary.
+ *
+ * @param {import('express').Request} req - The request object containing the summary ID and authenticated user.
+ * @param {import('express').Response} res - The response object used to return the deletion result.
+ * @returns {Promise<void>} Sends a JSON response confirming deletion or an error message.
+ */
 const deleteSummary = async (req, res) => {
   try {
     const summary = await Summary.findById(req.params.id);
@@ -169,6 +216,7 @@ const deleteSummary = async (req, res) => {
       });
     }
 
+    // Ownership check: users can only delete summaries they uploaded.
     if (summary.uploader.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,

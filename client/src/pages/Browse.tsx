@@ -7,6 +7,13 @@ import type { Summary } from '../store/summariesSlice';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * Displays the Browse Summaries page.
+ * The page loads summaries, allows users to search and filter them,
+ * and lets the original uploader edit or delete their own summaries.
+ *
+ * @returns The Browse page UI.
+ */
 function Browse() {
   const {
     summaries,
@@ -39,6 +46,12 @@ function Browse() {
   }, [fetchSummaries]);
 
   useEffect(() => {
+    /**
+     * Fetches the currently logged-in user from the backend.
+     * The user ID is used to decide whether edit/delete actions should be shown.
+     *
+     * @returns Resolves after setting the current user ID, or null if the user is not logged in.
+     */
     const fetchCurrentUser = async () => {
       if (!isLoggedIn) {
         setCurrentUserId(null);
@@ -56,6 +69,10 @@ function Browse() {
     fetchCurrentUser();
   }, [isLoggedIn]);
 
+  /**
+   * Filters summaries by course search, university, and subject.
+   * useMemo prevents recalculating the filtered list unless the summaries or filters change.
+   */
   const filteredSummaries = useMemo(() => {
     return summaries.filter((summary) => {
       const matchesSearch = summary.courseName
@@ -71,12 +88,23 @@ function Browse() {
     });
   }, [summaries, search, university, subject]);
 
+  /**
+   * Clears all selected filters and restores the full summaries list.
+   *
+   * @returns Nothing.
+   */
   const resetFilters = () => {
     setSearch('');
     setUniversity('');
     setSubject('');
   };
 
+  /**
+   * Deletes a summary after the user confirms the action.
+   *
+   * @param id - The MongoDB ID of the summary to delete.
+   * @returns Resolves after the summary is deleted, or stops if the user cancels.
+   */
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this summary?'
@@ -89,6 +117,12 @@ function Browse() {
     await deleteSummary(id);
   };
 
+  /**
+   * Starts edit mode for a selected summary and fills the edit form with its current values.
+   *
+   * @param summary - The summary selected for editing.
+   * @returns Nothing.
+   */
   const startEdit = (summary: Summary) => {
     setEditingId(summary._id);
     setEditForm({
@@ -100,6 +134,11 @@ function Browse() {
     clearActionMessage();
   };
 
+  /**
+   * Cancels edit mode and clears the edit form values.
+   *
+   * @returns Nothing.
+   */
   const cancelEdit = () => {
     setEditingId(null);
     setEditForm({
@@ -110,6 +149,12 @@ function Browse() {
     });
   };
 
+  /**
+   * Updates the local edit form state when the user changes an input, select, or textarea field.
+   *
+   * @param e - The form change event from the edited field.
+   * @returns Nothing.
+   */
   const handleEditChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -119,6 +164,12 @@ function Browse() {
     });
   };
 
+  /**
+   * Sends the updated summary data to the backend and closes edit mode.
+   *
+   * @param id - The MongoDB ID of the summary to update.
+   * @returns Resolves after the summary is updated.
+   */
   const handleUpdate = async (id: string) => {
     await updateSummary(id, editForm);
     setEditingId(null);
@@ -208,6 +259,7 @@ function Browse() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {filteredSummaries.map((summary) => {
+            // Compare the uploader ID with the current user ID to allow only owners to edit/delete.
             const uploaderId = summary.uploader?._id || summary.uploader?.id;
             const isOwner = !!currentUserId && uploaderId === currentUserId;
 
