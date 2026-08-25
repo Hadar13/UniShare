@@ -77,7 +77,6 @@ UniShare/
 │   ├── middleware/
 │   ├── models/
 │   ├── routes/
-│   ├── uploads/
 │   ├── validation/
 │   ├── .env.example
 │   ├── app.js
